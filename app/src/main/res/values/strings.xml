@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Nanodegree</string>
+
+    <string name="action_settings">Settings</string>
+    
+    <string name="main_title">My Nanodregee Apps</string>
+    <string name="main_spotify">Spotify Streamer</string>
+    <string name="main_scores">Football Scores App</string>
+    <string name="main_library">Library App</string>
+    <string name="main_bigger">Build It Bigger</string>
+    <string name="main_reader">XYZ Reader</string>
+    <string name="main_capstone">Capstone</string>
+
+    <string name="toast_spotify">This button will launch my spotify streamer app</string>
+    <string name="toast_scores">This button will launch my Football Scores App</string>
+    <string name="toast_library">This button will launch my Library App</string>
+    <string name="toast_bigger">This button will launch my Build it Bigger App</string>
+    <string name="toast_reader">This button will launch my XYZ Reader</string>
+    <string name="toast_capstone">This button will launch my Capstone App</string>
+</resources>
