@@ -1,15 +1,19 @@
 package com.alonsotagle.nanodegree;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.alonsotagle.nanodegree.spotify.SpotifyActivity;
+import com.alonsotagle.nanodegree.utils.Utils;
 
-public class MainActivity extends ActionBarActivity implements View.OnClickListener {
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     Button main_spotify;
     Button main_scores;
@@ -62,30 +66,46 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
+        String output = "";
+        Button btn = (Button)view;
         switch (view.getId()) {
             case R.id.main_spotify:
-                Toast.makeText(getApplicationContext(), R.string.toast_spotify, Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(MainActivity.this, SpotifyActivity.class));
                 break;
 
+            // TODO Uncomment while I go forward
+            /*
             case R.id.main_scores:
-                Toast.makeText(getApplicationContext(), R.string.toast_scores, Toast.LENGTH_SHORT).show();
+                output = getString(R.string.toast_scores);
                 break;
 
             case R.id.main_library:
-                Toast.makeText(getApplicationContext(), R.string.toast_library, Toast.LENGTH_SHORT).show();
+                output = getString(R.string.toast_library);
                 break;
 
             case R.id.main_bigger:
-                Toast.makeText(getApplicationContext(), R.string.toast_bigger, Toast.LENGTH_SHORT).show();
+                output = getString(R.string.toast_bigger);
                 break;
 
             case R.id.main_reader:
-                Toast.makeText(getApplicationContext(), R.string.toast_reader, Toast.LENGTH_SHORT).show();
+                output = getString(R.string.toast_reader);
                 break;
 
             case R.id.main_capstone:
-                Toast.makeText(getApplicationContext(), R.string.toast_capstone, Toast.LENGTH_SHORT).show();
+                output = getString(R.string.toast_capstone);
                 break;
+            */
+
+            default:
+                output = (String) btn.getText();
+                break;
+        }
+        showToast(output);
+    }
+
+    public void showToast(String s) {
+        if (!s.equals("")) {
+            Utils.showToast(MainActivity.this, getString(R.string.main_toast) + " " + s, Toast.LENGTH_SHORT);
         }
     }
 }

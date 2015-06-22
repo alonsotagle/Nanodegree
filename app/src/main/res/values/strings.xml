@@ -2,19 +2,24 @@
     <string name="app_name">Nanodegree</string>
 
     <string name="action_settings">Settings</string>
-    
+
+    <!-- Main Activity -->
     <string name="main_title">My Nanodregee Apps</string>
-    <string name="main_spotify">Spotify Streamer</string>
+    <string name="main_spotify">Spotify Streamer App</string>
     <string name="main_scores">Football Scores App</string>
     <string name="main_library">Library App</string>
-    <string name="main_bigger">Build It Bigger</string>
-    <string name="main_reader">XYZ Reader</string>
-    <string name="main_capstone">Capstone</string>
+    <string name="main_bigger">Build It Bigger App</string>
+    <string name="main_reader">XYZ Reader App</string>
+    <string name="main_capstone">Capstone App</string>
+    <string name="main_toast">This button will launch my</string>
 
-    <string name="toast_spotify">This button will launch my spotify streamer app</string>
-    <string name="toast_scores">This button will launch my Football Scores App</string>
-    <string name="toast_library">This button will launch my Library App</string>
-    <string name="toast_bigger">This button will launch my Build it Bigger App</string>
-    <string name="toast_reader">This button will launch my XYZ Reader</string>
-    <string name="toast_capstone">This button will launch my Capstone App</string>
+    <!-- Spotify Activity -->
+    <string name="spotify_searcher_title">Spotify Streamer</string>
+    <string name="spotify_dialog_wait">Wait...</string>
+    <string name="spotify_searcher_not_found">Ups :( artist name not found, please refine your search</string>
+    <string name="spotify_top_tracks_title">Top 10 Tracks</string>
+    <string name="spotify_song_title">Song title</string>
+    <string name="spotify_album_name">Album name</string>
+    <string name="spotify_artist_name">Artist name</string>
+
 </resources>
