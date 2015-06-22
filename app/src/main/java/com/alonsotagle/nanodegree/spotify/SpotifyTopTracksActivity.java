@@ -22,6 +22,8 @@ public class SpotifyTopTracksActivity extends AppCompatActivity {
                 artistSongsFragment.showArtistTopTrack(getIntent().getExtras().getString("artist_id"));
                 artistName = getIntent().getExtras().getString("artist_name");
             }
+        } else {
+            artistName = savedInstanceState.getString("subtitle");
         }
 
         getSupportActionBar().setSubtitle(artistName);
@@ -44,5 +46,11 @@ public class SpotifyTopTracksActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putString("subtitle", artistName);
     }
 }

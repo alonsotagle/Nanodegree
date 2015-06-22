@@ -123,6 +123,7 @@ public class SpotifySearcherFragment extends Fragment implements AdapterView.OnI
                     @Override
                     public void run() {
                         progressDialog.dismiss();
+                        Utils.showToast(context, getString(R.string.spotify_no_internet), Toast.LENGTH_LONG);
                     }
                 });
             }

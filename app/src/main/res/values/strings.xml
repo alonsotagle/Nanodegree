@@ -21,5 +21,6 @@
     <string name="spotify_song_title">Song title</string>
     <string name="spotify_album_name">Album name</string>
     <string name="spotify_artist_name">Artist name</string>
+    <string name="spotify_no_internet">It looks you don\'t have internet connection</string>
 
 </resources>
