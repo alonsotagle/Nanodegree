@@ -18,7 +18,7 @@ public class SpotifyTopTracksActivity extends AppCompatActivity {
 
         if(savedInstanceState == null) {
             if (getIntent().getExtras() != null) {
-                SpotifyTopTracksActivityFragment artistSongsFragment = (SpotifyTopTracksActivityFragment) getSupportFragmentManager().findFragmentById(R.id.spotify_fragment_container_top_tracks);
+                SpotifyTopTracksActivityFragment artistSongsFragment = (SpotifyTopTracksActivityFragment) getFragmentManager().findFragmentById(R.id.spotify_fragment_container_top_tracks);
                 artistSongsFragment.showArtistTopTrack(getIntent().getExtras().getString("artist_id"));
                 artistName = getIntent().getExtras().getString("artist_name");
             }

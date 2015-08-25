@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Nanodegree</string>
-
     <string name="action_settings">Settings</string>
 
     <!-- Main Activity -->
@@ -22,5 +21,15 @@
     <string name="spotify_album_name">Album name</string>
     <string name="spotify_artist_name">Artist name</string>
     <string name="spotify_no_internet">It looks you don\'t have internet connection</string>
+    <string name="title_activity_spotify_player">SpotifyPlayerActivity</string>
+    <bool name="isTablet">false</bool>
+
+    <!-- Spotify Player -->
+    <string name="spotify_no_tracks">No tracks :(</string>
+    <string name="tickerSpotify">Playing: </string>
+    <string name="notification_track_title">Track Title</string>
+    <string name="notification_artist_name">Artist name</string>
+    <string name="share_with">Share with...</string>
+    <string name="action_playingnow">Playing now...</string>
 
 </resources>

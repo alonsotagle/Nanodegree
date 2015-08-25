@@ -1,8 +1,8 @@
 package com.alonsotagle.nanodegree.spotify;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
@@ -29,16 +29,21 @@ import retrofit.client.Response;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class SpotifySearcherFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class SpotifySearcherFragment extends Fragment {
 
     private ArtistSearchAdapter artistSearchAdapter;
+    private ArtistSelectedListener artistSelectedListener;
+
+    public interface ArtistSelectedListener {
+        void onSearchArtistTopTracks(String artistId);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
 
         artistSearchAdapter = new ArtistSearchAdapter();
-        setRetainInstance(true);
     }
 
     @Override
@@ -53,7 +58,13 @@ public class SpotifySearcherFragment extends Fragment implements AdapterView.OnI
 
         ListView artistSearchResults = (ListView)view.findViewById(R.id.lv_spotify_artist_results);
         artistSearchResults.setAdapter(artistSearchAdapter);
-        artistSearchResults.setOnItemClickListener(this);
+        artistSearchResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Artist artist = (Artist) parent.getAdapter().getItem(position);
+                ((ArtistSelectedListener)  getActivity()).onSearchArtistTopTracks(artist.id);
+            }
+        });
 
         final EditText etSearchArtist = (EditText) view.findViewById(R.id.et_spotify_search);
         etSearchArtist.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -106,7 +117,7 @@ public class SpotifySearcherFragment extends Fragment implements AdapterView.OnI
                                 public void run() {
                                     artistSearchAdapter.clearData();
                                     progressDialog.dismiss();
-                                    Utils.showToast(context, getString(R.string.spotify_searcher_not_found), Toast.LENGTH_LONG);
+                                    Utils.showToast(context, getString(R.string.spotify_no_tracks), Toast.LENGTH_LONG);
                                 }
                             });
                         }
@@ -131,11 +142,18 @@ public class SpotifySearcherFragment extends Fragment implements AdapterView.OnI
     }
 
     @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Artist artist = (Artist) adapterView.getAdapter().getItem(i);
-        Intent artistSongsIntent = new Intent(getActivity(), SpotifyTopTracksActivity.class);
-        artistSongsIntent.putExtra("artist_id", artist.id);
-        artistSongsIntent.putExtra("artist_name", artist.name);
-        startActivity(artistSongsIntent);
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (activity instanceof ArtistSelectedListener) {
+            artistSelectedListener = (ArtistSelectedListener) activity;
+        } else {
+            throw new ClassCastException(activity.toString() + " must implemenet ArtistSelectedListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        artistSelectedListener = null;
     }
 }

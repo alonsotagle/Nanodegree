@@ -1,6 +1,7 @@
 package com.alonsotagle.nanodegree;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -26,6 +27,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if(getResources().getBoolean(R.bool.isTablet)){
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
 
         main_spotify = (Button)findViewById(R.id.main_spotify);
         main_scores = (Button)findViewById(R.id.main_scores);
