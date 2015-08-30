@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
@@ -12,6 +13,7 @@ import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.preference.PreferenceManager;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
@@ -44,7 +46,7 @@ public class SpotifyPlayerService extends Service implements MediaPlayer.OnPrepa
     private TextView mTrackNameTextView;
     private TextView mAlbumNameTextView;
     private TextView mArtistTextView;
-
+    private boolean mIsShowNotification = true;
 
     // Class to communicate service with fragment
     public class SpotifyPlayerBinder extends Binder {
@@ -64,6 +66,8 @@ public class SpotifyPlayerService extends Service implements MediaPlayer.OnPrepa
         spotifyPlayer = new MediaPlayer();
 
         initSpotifyPlayer();
+
+        mIsShowNotification = IsShowNotificationFromPreference();
     }
 
     public void initSpotifyPlayer() {
@@ -138,7 +142,13 @@ public class SpotifyPlayerService extends Service implements MediaPlayer.OnPrepa
             }
         }
 
-        BuildNotification(android.R.drawable.ic_media_pause);
+        mIsShowNotification = IsShowNotificationFromPreference();
+
+        if(mIsShowNotification) {
+            BuildNotification(android.R.drawable.ic_media_pause);
+        } else {
+            stopForeground(true);
+        }
     }
 
     public void BuildNotification(final int playPauseControlResourceId) {
@@ -158,6 +168,7 @@ public class SpotifyPlayerService extends Service implements MediaPlayer.OnPrepa
 
         builder.setContentIntent(pendInt)
                 .setSmallIcon(android.R.drawable.ic_media_play)
+                .setVisibility(Notification.VISIBILITY_PUBLIC)
                 .setTicker(song.getArtistName() + " - " + song.name)
                 .setOngoing(true)
                 .setContentTitle(song.getArtistName())
@@ -350,5 +361,12 @@ public class SpotifyPlayerService extends Service implements MediaPlayer.OnPrepa
             this.mAlbumNameTextView.setText(playSong.getalbumName());
             this.mArtistTextView.setText(playSong.getArtistName());
         }
+    }
+
+    private boolean IsShowNotificationFromPreference() {
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        boolean showNotificationPreference = sharedPrefs.getBoolean(SettingsActivity.SHOW_NOTIFICATION_PREFERENCE_ID, true);
+
+        return showNotificationPreference;
     }
 }

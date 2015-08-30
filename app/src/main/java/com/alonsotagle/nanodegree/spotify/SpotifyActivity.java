@@ -10,6 +10,7 @@ import android.view.MenuItem;
 
 import com.alonsotagle.nanodegree.Application;
 import com.alonsotagle.nanodegree.R;
+import com.alonsotagle.nanodegree.spotify2.SettingsActivity;
 import com.alonsotagle.nanodegree.spotify2.SpotifyPlayerActivity;
 import com.alonsotagle.nanodegree.spotify2.SpotifyPlayerFragment;
 
@@ -19,6 +20,7 @@ public class SpotifyActivity extends AppCompatActivity implements SpotifySearche
     private boolean isTablet;
     private MenuItem mPlayingNow;
     private AnimationDrawable mPlayNowAnimationDrawable;
+    public static final int RESULT_SETTINGS = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,23 +80,41 @@ public class SpotifyActivity extends AppCompatActivity implements SpotifySearche
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_playing_now) {
+        switch (id) {
+            case R.id.action_playing_now:
+                if (isTablet) {
+                    SpotifyPlayerFragment spotifyPlayerFragment = new SpotifyPlayerFragment();
+                    spotifyPlayerFragment.setTwoPane(true);
+                    spotifyPlayerFragment.show(this.getFragmentManager(), "spotify_player");
+                } else {
+                    Intent playerIntent = new Intent(this, SpotifyPlayerActivity.class);
+                    startActivity(playerIntent);
+                }
 
+                return true;
 
-            if (isTablet) {
-                SpotifyPlayerFragment spotifyPlayerFragment = new SpotifyPlayerFragment();
-                spotifyPlayerFragment.setTwoPane(true);
-                spotifyPlayerFragment.show(this.getFragmentManager(), "spotify_player");
-            } else {
-                Intent playerIntent = new Intent(this, SpotifyPlayerActivity.class);
-                startActivity(playerIntent);
-            }
-
-            return true;
+            case R.id.action_settings:
+                Intent i = new Intent(this, SettingsActivity.class);
+                startActivityForResult(i, RESULT_SETTINGS);
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (isTablet) {
+            switch (requestCode) {
+                case SpotifyActivity.RESULT_SETTINGS:
+                    spotifyTopTracksActivityFragment.UpdateTopTenTracksOnPreferenceUpdate();
+                    break;
+
+            }
+        }
     }
 
     @Override

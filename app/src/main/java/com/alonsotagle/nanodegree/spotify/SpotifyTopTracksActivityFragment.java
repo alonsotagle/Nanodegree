@@ -3,7 +3,9 @@ package com.alonsotagle.nanodegree.spotify;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.alonsotagle.nanodegree.R;
+import com.alonsotagle.nanodegree.spotify2.SettingsActivity;
 import com.alonsotagle.nanodegree.spotify2.SpotifyPlayerActivity;
 import com.alonsotagle.nanodegree.spotify2.SpotifyPlayerFragment;
 import com.alonsotagle.nanodegree.utils.Utils;
@@ -22,7 +25,6 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
@@ -40,6 +42,8 @@ public class SpotifyTopTracksActivityFragment extends Fragment implements Adapte
 
     private ArtistTracksAdapter artistTracksAdapter;
     private boolean isTablet;
+    private String mCountryCode;
+    private String mArtistID;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,6 +71,9 @@ public class SpotifyTopTracksActivityFragment extends Fragment implements Adapte
 
     public void showArtistTopTrack(String artistId) {
 
+        mArtistID = artistId;
+        mCountryCode = GetCountryCodeFromPreference();
+
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.show();
@@ -75,7 +82,7 @@ public class SpotifyTopTracksActivityFragment extends Fragment implements Adapte
         SpotifyApi spotifyApi = new SpotifyApi();
         SpotifyService spotifyService = spotifyApi.getService();
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("country", Locale.getDefault().getCountry());
+        parameters.put("country", mCountryCode);
         spotifyService.getArtistTopTrack(artistId, parameters, new Callback<Tracks>() {
             @Override
             public void success(final Tracks tracks, Response response) {
@@ -137,6 +144,27 @@ public class SpotifyTopTracksActivityFragment extends Fragment implements Adapte
             playerIntent.putExtra("list_items", gson.toJson(((ArtistTracksAdapter) adapterView.getAdapter()).getItems(), trackAdapterType));
             playerIntent.putExtra("track_selected_position", i);
             startActivity(playerIntent);
+        }
+    }
+
+    public void UpdateTopTenTracksOnPreferenceUpdate() {
+        if(artistTracksAdapter != null) {
+            String selectecCountryCode = GetCountryCodeFromPreference();
+
+            if (!selectecCountryCode.equals(mCountryCode) && mArtistID != null) {
+                showArtistTopTrack(mArtistID);
+            }
+        }
+    }
+
+    public String GetCountryCodeFromPreference() {
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String tempCountryCode = sharedPrefs.getString(SettingsActivity.COUNTRY_PREFERENCE_ID, "");
+
+        if(tempCountryCode.length() == 0) {
+            return getActivity().getResources().getConfiguration().locale.getCountry();
+        } else {
+            return tempCountryCode;
         }
     }
 }
