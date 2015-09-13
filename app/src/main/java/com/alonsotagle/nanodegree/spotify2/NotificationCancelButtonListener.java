@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 
+import com.alonsotagle.nanodegree.spotify.SpotifyActivity;
+
 /**
  * Created by AlonsoTagle on 22/08/15.
  */
@@ -28,9 +30,20 @@ public class NotificationCancelButtonListener extends BroadcastReceiver {
 
         if(this.mPlayerService != null) {
 
+
+            this.mPlayerService.setmCancellable(true);
+
             this.mPlayerService.stopPlayer();
 
             context.stopService(new Intent(context, SpotifyPlayerService.class));
+
+            boolean alo = intent.getBooleanExtra("isTablet", false);
+            if (alo) {
+                SpotifyPlayerFragment.mDialogFragment.dismiss();
+                SpotifyActivity.activity.onWindowFocusChanged(true);
+            } else {
+                SpotifyPlayerActivity.activity.finish();
+            }
 
             NotificationManager notificationmanager = (NotificationManager) context.getSystemService(SpotifyPlayerService.NOTIFICATION_SERVICE);
             notificationmanager.cancel(SpotifyPlayerService.NOTIFICATION_ID);

@@ -14,13 +14,14 @@ import com.alonsotagle.nanodegree.spotify2.SettingsActivity;
 import com.alonsotagle.nanodegree.spotify2.SpotifyPlayerActivity;
 import com.alonsotagle.nanodegree.spotify2.SpotifyPlayerFragment;
 
-public class SpotifyActivity extends AppCompatActivity implements SpotifySearcherFragment.ArtistSelectedListener{
+public class SpotifyActivity extends AppCompatActivity implements SpotifySearcherFragment.ArtistSelectedListener {
 
     private SpotifyTopTracksActivityFragment spotifyTopTracksActivityFragment;
     private boolean isTablet;
     private MenuItem mPlayingNow;
     private AnimationDrawable mPlayNowAnimationDrawable;
     public static final int RESULT_SETTINGS = 1;
+    public static AppCompatActivity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +29,7 @@ public class SpotifyActivity extends AppCompatActivity implements SpotifySearche
         setContentView(R.layout.activity_spotify);
 
         isTablet = getResources().getBoolean(R.bool.isTablet);
+        activity = this;
 
         if (isTablet) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -53,7 +55,7 @@ public class SpotifyActivity extends AppCompatActivity implements SpotifySearche
 
         boolean isPlayingNow = Application.getIsPlayingNow();
 
-        if(hasFocus && isPlayingNow && mPlayingNow != null) {
+        if(isPlayingNow && mPlayingNow != null) {
             mPlayingNow.setVisible(true);
             mPlayNowAnimationDrawable.start();
         } else {
@@ -78,9 +80,8 @@ public class SpotifyActivity extends AppCompatActivity implements SpotifySearche
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        switch (id) {
+        switch (item.getItemId()) {
             case R.id.action_playing_now:
                 if (isTablet) {
                     SpotifyPlayerFragment spotifyPlayerFragment = new SpotifyPlayerFragment();

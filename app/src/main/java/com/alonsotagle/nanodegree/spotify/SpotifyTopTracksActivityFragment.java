@@ -71,6 +71,11 @@ public class SpotifyTopTracksActivityFragment extends Fragment implements Adapte
 
     public void showArtistTopTrack(String artistId) {
 
+        if (!Utils.isNetworkAvailable(getActivity())) {
+            Utils.showToast(getActivity(), getString(R.string.spotify_no_internet), Toast.LENGTH_LONG);
+            return;
+        }
+
         mArtistID = artistId;
         mCountryCode = GetCountryCodeFromPreference();
 
@@ -88,8 +93,8 @@ public class SpotifyTopTracksActivityFragment extends Fragment implements Adapte
             public void success(final Tracks tracks, Response response) {
 
                 if (response.getStatus() == 200) {
-                    if (tracks != null && getActivity() != null) {
 
+                    if (tracks != null && getActivity() != null && !tracks.tracks.isEmpty()) {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -104,6 +109,10 @@ public class SpotifyTopTracksActivityFragment extends Fragment implements Adapte
                                 artistTracksAdapter.clearData();
                                 progressDialog.dismiss();
                                 Utils.showToast(getActivity().getApplicationContext(), getString(R.string.spotify_no_tracks), Toast.LENGTH_LONG);
+
+                                if (!isTablet) {
+                                    getActivity().finish();
+                                }
                             }
                         });
 

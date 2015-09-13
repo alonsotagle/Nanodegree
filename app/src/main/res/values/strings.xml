@@ -25,7 +25,7 @@
     <bool name="isTablet">false</bool>
 
     <!-- Spotify Player -->
-    <string name="spotify_no_tracks">No tracks :(</string>
+    <string name="spotify_no_tracks">This artist doesn\'t has tracks :(</string>
     <string name="tickerSpotify">Playing: </string>
     <string name="notification_track_title">Track Title</string>
     <string name="notification_artist_name">Artist name</string>
@@ -283,5 +283,6 @@
     <string name="country_ZM">Zambia</string>
     <string name="country_ZW">Zimbabwe</string>
     <string name="default_recommended">Standard (Recommended)</string>
+    <string name="search_by_artist_name">Search by artist name...</string>
 
 </resources>

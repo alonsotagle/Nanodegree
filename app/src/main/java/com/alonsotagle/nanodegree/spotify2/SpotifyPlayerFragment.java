@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
@@ -50,9 +51,8 @@ public class SpotifyPlayerFragment extends DialogFragment implements MediaPlayer
     private Intent playIntent;
     private boolean musicBound = false;
     private MusicController controller;
-
-    //activity and playback pause flags
     private boolean playbackPaused = false;
+    public static DialogFragment mDialogFragment;
 
     public void setTwoPane(boolean twoPane) {
         this.mTwoPane = twoPane;
@@ -116,7 +116,6 @@ public class SpotifyPlayerFragment extends DialogFragment implements MediaPlayer
             getActivity().bindService(playIntent, musicConnection, Context.BIND_ADJUST_WITH_ACTIVITY);
             getActivity().startService(playIntent);
         }
-
     }
 
     @Override
@@ -155,7 +154,7 @@ public class SpotifyPlayerFragment extends DialogFragment implements MediaPlayer
             public void onClick(View v) {
                 String trackUrl = Application.getCurrentTrackUrl();
 
-                if(trackUrl != null && (!trackUrl.isEmpty())) {
+                if (trackUrl != null && (!trackUrl.isEmpty())) {
                     Intent sendIntent = new Intent();
                     sendIntent.setAction(Intent.ACTION_SEND);
                     sendIntent.putExtra(Intent.EXTRA_TEXT, trackUrl);
@@ -189,6 +188,10 @@ public class SpotifyPlayerFragment extends DialogFragment implements MediaPlayer
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        getActivity().onWindowFocusChanged(true);
+        mDialogFragment = this;
+
         return dialog;
     }
 
@@ -219,16 +222,20 @@ public class SpotifyPlayerFragment extends DialogFragment implements MediaPlayer
 
     @Override
     public int getCurrentPosition() {
-        if(musicSrv != null && musicBound && musicSrv.isPng())
+        if (!musicSrv.getmCancellable()) {
             return musicSrv.getPosn();
-        else return 0;
+        } else {
+            return 0;
+        }
     }
 
     @Override
     public int getDuration() {
-        if(musicSrv!=null && musicBound && musicSrv.isPng())
+        if (!musicSrv.getmCancellable()) {
             return musicSrv.getDur();
-        else return 0;
+        } else {
+            return 0;
+        }
     }
 
     @Override
@@ -320,5 +327,12 @@ public class SpotifyPlayerFragment extends DialogFragment implements MediaPlayer
             mTrackList = gson.fromJson(tracks, trackAdapterType);
             mTrackIndex = trackSelectedPosition;
         }
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+
+        getActivity().onWindowFocusChanged(true);
     }
 }

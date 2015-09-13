@@ -10,6 +10,7 @@ import com.alonsotagle.nanodegree.R;
 public class SpotifyPlayerActivity extends AppCompatActivity {
 
     private SpotifyPlayerFragment spotifyPlayerFragment;
+    static AppCompatActivity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,7 +19,9 @@ public class SpotifyPlayerActivity extends AppCompatActivity {
 
         getSupportActionBar().hide();
 
-        if(savedInstanceState == null) {
+        activity = this;
+
+        if (savedInstanceState == null) {
 
             this.spotifyPlayerFragment = new SpotifyPlayerFragment();
             this.spotifyPlayerFragment.setTwoPane(false);
@@ -35,7 +38,6 @@ public class SpotifyPlayerActivity extends AppCompatActivity {
             getFragmentManager().beginTransaction().add(R.id.spotify_player_container, spotifyPlayerFragment).commit();
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -58,5 +60,4 @@ public class SpotifyPlayerActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
 }

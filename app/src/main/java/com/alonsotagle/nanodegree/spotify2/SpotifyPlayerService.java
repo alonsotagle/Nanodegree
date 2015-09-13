@@ -47,6 +47,7 @@ public class SpotifyPlayerService extends Service implements MediaPlayer.OnPrepa
     private TextView mAlbumNameTextView;
     private TextView mArtistTextView;
     private boolean mIsShowNotification = true;
+    private boolean mCancellable = false;
 
     // Class to communicate service with fragment
     public class SpotifyPlayerBinder extends Binder {
@@ -121,8 +122,6 @@ public class SpotifyPlayerService extends Service implements MediaPlayer.OnPrepa
 
     @Override
     public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
-        Log.v("MUSIC PLAYER", "Playback Error");
-        mediaPlayer.reset();
         return false;
     }
 
@@ -163,7 +162,7 @@ public class SpotifyPlayerService extends Service implements MediaPlayer.OnPrepa
             notIntent = new Intent(this, SpotifyActivity.class);
         }
 
-        notIntent.addFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
+        notIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendInt = PendingIntent.getActivity(this, 0, notIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         builder.setContentIntent(pendInt)
@@ -232,9 +231,9 @@ public class SpotifyPlayerService extends Service implements MediaPlayer.OnPrepa
         try {
             playing = spotifyPlayer.isPlaying();
             Application.setIsPlayingNow(playing);
-            return playing;
         } catch (Exception ex) {
             Application.setIsPlayingNow(playing);
+        } finally {
             return playing;
         }
     }
@@ -287,7 +286,9 @@ public class SpotifyPlayerService extends Service implements MediaPlayer.OnPrepa
     //skip to previous track
     public void playPrev() {
         songIndex--;
-        if(songIndex < 0) songIndex = trackList.size()-1;
+        if(songIndex < 0) {
+            songIndex = trackList.size() - 1;
+        }
         playSong();
     }
 
@@ -338,8 +339,8 @@ public class SpotifyPlayerService extends Service implements MediaPlayer.OnPrepa
         PendingIntent pendingNotificationNextIntent = PendingIntent.getBroadcast(this, 0, notificationNextIntent, 0);
 
         Intent notificationCancelIntent = new Intent(this, NotificationCancelButtonListener.class);
-        PendingIntent pendingNotificationCancelIntent = PendingIntent.getBroadcast(this, 0, notificationCancelIntent, 0);
-
+        notificationCancelIntent.putExtra("isTablet", mTwoPane);
+        PendingIntent pendingNotificationCancelIntent = PendingIntent.getBroadcast(this, 0, notificationCancelIntent, Intent.FILL_IN_DATA);
 
         notificationView.setOnClickPendingIntent(R.id.notification_play_button, pendingNotificationPlayIntent);
         notificationView.setOnClickPendingIntent(R.id.notification_prev_button, pendingNotificationPrevIntent);
@@ -368,5 +369,13 @@ public class SpotifyPlayerService extends Service implements MediaPlayer.OnPrepa
         boolean showNotificationPreference = sharedPrefs.getBoolean(SettingsActivity.SHOW_NOTIFICATION_PREFERENCE_ID, true);
 
         return showNotificationPreference;
+    }
+
+    public void setmCancellable(boolean mCancellable) {
+        this.mCancellable = mCancellable;
+    }
+
+    public boolean getmCancellable() {
+        return mCancellable;
     }
 }
